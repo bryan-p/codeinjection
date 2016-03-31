@@ -4,24 +4,24 @@ section .text
 _start:
 
 execve:
+    ; 64 bit System V ABI 
+    ; system calls use: RDI/RSI/RDX/R10/R8/R9
+
     ; int execve(const char *filename, char *const argv [], char *const envp[])
-    ;                     ebx                 ecx                edx
+    ;                     RDI                 RSI                RDX
 
     xor rax, rax
     push rax          ; null terminate following string on stack
 
-    ; push ////bin/bash str on stack
-    push 0x68732f2f   ; //sh
-    push 0x2f6e6962   ; bin/
-    push 0x2f2f2f2f   ; ////
+    push 0x68732f2f6e69622f ; push /bin//sh on to stack
 
-    mov rbx, rsp      ; point ebx to beginning of string just pushed
+    mov rdi, rsp      ; point rdi to beginning of string just pushed
 
     push rax          ; null terminate following 
-    mov rdx, rsp      ; edx points to null on stack 
+    mov rdx, rsp      ; rdx points to null on stack 
 
-    push rbx          ; push address os /bin/sh on stack
-    mov rcx, rsp      ; point ecx to that address
+    push rdi          ; push address os /bin/sh on stack
+    mov rsi, rsp      ; point rsi to that address
 
-    mov al, 11        ; Syscall #11
-    int 0x80          ; Do it.
+    add rax, 59       ; Syscall #59
+    syscall
