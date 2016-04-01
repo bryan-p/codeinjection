@@ -13,7 +13,8 @@ execve:
     xor rax, rax
     push rax          ; null terminate following string on stack
 
-    push 0x68732f2f6e69622f ; push /bin//sh on to stack
+    mov rbx, 0x68732f2f6e69622f ; push /bin//sh on to stack
+    push rbx
 
     mov rdi, rsp      ; point rdi to beginning of string just pushed
 
