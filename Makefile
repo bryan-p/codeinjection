@@ -15,6 +15,12 @@ testsc2: testsc2.c
 testsc3: testsc3.c 
 	$(CC) $(FLAGS) -o bin/testsc3 testsc3.c
 
+getenvaddr: getenvaddr.c 
+	$(CC) $(FLAGS) -o bin/getenvaddr getenvaddr.c
+
+getenvaddr32: getenvaddr.c 
+	$(CC) $(FLAGS) $(x86) -o bin/getenvaddr32 getenvaddr.c
+
 vuln: vulnerable.c 
 	$(CC) $(FLAGS) -o bin/vuln vulnerable.c
 
